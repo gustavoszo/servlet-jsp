@@ -1,11 +1,14 @@
 package controllers;
 
+import java.io.IOException;
+import java.sql.Connection;
+
+import database.Database;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Servlet implementation class MainController
@@ -28,6 +31,9 @@ public class MainController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		Connection conn = Database.getConnection();
+		System.out.print(conn);
 	}
 
 }
