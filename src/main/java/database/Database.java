@@ -7,52 +7,46 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Database {
-	
+
 	private Database() {}
-	
-	private static Connection conn = null;
 
 	public static Connection getConnection() {
-		if (conn == null) {
-			try {               
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/agenda_db?useSSL=false", "root", "root");
-	        } catch (SQLException e) {
-	        	throw new DatabaseException(e.getMessage());
-	        } catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			return DriverManager.getConnection(
+			    "jdbc:mysql://localhost:3306/agenda_db?useSSL=false", "root", "root"
+			);
+		} catch (SQLException | ClassNotFoundException e) {
+			throw new DatabaseException(e.getMessage());
 		}
-	    return conn;
 	}
-		
-	public static void closeConnection() {
+
+	public static void closeConnection(Connection conn) {
 		if (conn != null) {
-	    	try {
-	        	conn.close();
-	        } catch(SQLException e) {
-	        	throw new DatabaseException(e.getMessage());
-			}
-		}
-	}
-		
-	public static void closeStatement(Statement st) {
-		if (st != null) {
 			try {
-	        	st.close();
+				conn.close();
 			} catch (SQLException e) {
-	        	throw new DatabaseException(e.getMessage());
+				throw new DatabaseException(e.getMessage());
 			}
 		}
 	}
 
-	public static void closeResultSet(ResultSet rs) {
-		if (rs != null) {
+	public static void closeStatement(Statement statement) {
+		if (statement != null) {
 			try {
-				rs.close();
+				statement.close();
 			} catch (SQLException e) {
-	        	throw new DatabaseException(e.getMessage());
+				throw new DatabaseException(e.getMessage());
+			}
+		}
+	}
+
+	public static void closeResultSet(ResultSet resultSet) {
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				throw new DatabaseException(e.getMessage());
 			}
 		}
 	}
