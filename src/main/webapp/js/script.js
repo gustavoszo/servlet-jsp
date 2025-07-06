@@ -17,3 +17,12 @@ function validateForm() {
 
    form.submit();
 }
+
+function confirmDelete(id) {
+	let response = confirm(`Deseja realmente remover o contato '${id}'?`);
+	
+	if (response == true) {
+		window.location.href = "/Agenda/contacts/delete?id=" + id
+	}
+}
+

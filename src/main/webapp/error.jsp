@@ -3,15 +3,15 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<link rel="icon" href="images/favicon.png">
-  	<link rel="stylesheet" href="css/style.css">
+	<link rel="icon" href="<%= request.getContextPath() + "/images/favicon.png" %>">	
+  	<link rel="stylesheet" href="<%= request.getContextPath() + "/css/style.css?v=3" %>">
   	<title>Agenda de contatos</title>
 </head>
 <body>
 	<div class="container">
 		<div class="box">
 			<h1>Ocorreu um erro</h1>
-			<p>${errorMessage}</p>
+			<p><%= request.getAttribute("errorMessage") %></p>
 			<a href="main" class="button">Voltar</a>
 		</div>
 	</div>

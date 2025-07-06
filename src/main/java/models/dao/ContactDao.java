@@ -56,12 +56,12 @@ public class ContactDao {
 	    	resultSet = statement.executeQuery();
 				
 	        while (resultSet.next()) {
-	           var contact = new Contact();
-	           contact.setId(resultSet.getInt(1));
-	           contact.setName(resultSet.getString(2));
-	           contact.setPhone(resultSet.getString(3));
-	           contact.setEmail(resultSet.getString(4));
-	           list.add(contact);
+	        	var contact = new Contact();
+	        	contact.setId(resultSet.getInt(1));
+	        	contact.setName(resultSet.getString(2));
+	        	contact.setPhone(resultSet.getString(3));
+	        	contact.setEmail(resultSet.getString(4));
+	        	list.add(contact);
 	        }
 	        
 		} catch(SQLException e) {
@@ -74,4 +74,73 @@ public class ContactDao {
 	    }
 	    return list;
 	}
+	
+	public Contact findById(int id) {
+		Connection connection = Database.getConnection(); 
+		PreparedStatement statement = null;
+	    ResultSet resultSet = null;
+        Contact contact = null;
+	    try {
+	    	statement = connection.prepareStatement("SELECT * FROM contatos WHERE id = ?");
+	        statement.setInt(1, id);
+	        
+	    	resultSet = statement.executeQuery();	
+	        if (resultSet.next()) {
+	        	contact = new Contact();
+	        	contact.setId(resultSet.getInt(1));
+	        	contact.setName(resultSet.getString(2));
+	        	contact.setPhone(resultSet.getString(3));
+	        	contact.setEmail(resultSet.getString(4));
+	        }
+	        
+		} catch(SQLException e) {
+			e.printStackTrace(); // ou log
+	    } finally {
+	    	Database.closeConnection(connection);
+	    	Database.closeStatement(statement);
+	    	Database.closeResultSet(resultSet);
+	    }
+	    return contact;
+	}
+	
+	public void update(Contact contact) {
+		Connection connection = Database.getConnection();
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			statement = connection.prepareStatement("UPDATE contatos "
+					+ "SET nome = ?, fone = ?, email = ? "
+					+ "WHERE id = ?");
+
+			statement.setString(1, contact.getName());
+			statement.setString(2, contact.getPhone());
+			statement.setString(3, contact.getEmail());
+			statement.setInt(4, contact.getId());
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DatabaseException(e.getMessage());
+		} finally {
+			Database.closeConnection(connection);
+			Database.closeStatement(statement);
+			Database.closeResultSet(resultSet);
+		}
+	}
+	
+	public void deleteById(Integer id) {
+		Connection connection = Database.getConnection();
+		PreparedStatement statement = null;
+        try {
+        	statement = connection.prepareStatement("DELETE FROM contatos WHERE id = ?");
+        	statement.setInt(1, id);
+        	statement.executeUpdate();
+            
+        } catch(SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        } finally {
+        	Database.closeConnection(connection);
+			Database.closeStatement(statement);
+        }
+    }
 }
